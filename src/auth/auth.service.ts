@@ -23,6 +23,14 @@ export class AuthService {
                 const { password, ...result } = user;
                 return result;
             }
+        } else {
+            throw new HttpException(
+                {
+                    status: HttpStatus.UNAUTHORIZED,
+                    error: 'there is no user with such email',
+                },
+                HttpStatus.UNAUTHORIZED,
+            );
         }
 
         return null;
