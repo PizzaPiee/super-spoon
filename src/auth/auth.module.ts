@@ -8,15 +8,22 @@ import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './constants';
 import { JwtStrategy } from './jwt.strategy';
 import { PrismaClientService } from 'src/prisma-client.service';
+import { RtStrategy } from './jwt-refresh.strategy';
 
 @Module({
-    providers: [AuthService, LocalStrategy, JwtStrategy, PrismaClientService],
+    providers: [
+        AuthService,
+        LocalStrategy,
+        JwtStrategy,
+        PrismaClientService,
+        RtStrategy,
+    ],
     imports: [
         UsersModule,
         PassportModule,
         JwtModule.register({
             secret: jwtConstants.secret,
-            signOptions: { expiresIn: 30 },
+            signOptions: { expiresIn: '5m' },
         }),
     ],
     controllers: [AuthController],
