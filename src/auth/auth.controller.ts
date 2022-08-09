@@ -1,4 +1,11 @@
-import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    HttpCode,
+    Post,
+    Req,
+    UseGuards,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from 'src/common/decorators';
 import { AuthService } from './auth.service';
@@ -20,12 +27,14 @@ export class AuthController {
     }
 
     @Post('signup')
+    @HttpCode(201)
     signup(@Body() user: CreateUserDto): Promise<Tokens> {
         return this.authService.signup(user);
     }
 
     @UseGuards(JwtAuthGuard)
     @Post('logout')
+    @HttpCode(202)
     logout(@User() user: JwtPayload) {
         return this.authService.logout(user.sub);
     }
