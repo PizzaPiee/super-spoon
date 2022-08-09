@@ -1,5 +1,6 @@
 import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { User } from 'src/common/decorators';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
@@ -25,15 +26,13 @@ export class AuthController {
 
     @UseGuards(JwtAuthGuard)
     @Post('logout')
-    logout(@Req() req) {
-        const user: JwtPayload = req.user;
+    logout(@User() user: JwtPayload) {
         return this.authService.logout(user.sub);
     }
 
     @UseGuards(JwtRefreshGuard)
     @Post('refresh')
-    refresh(@Req() req) {
-        const user: JwtPayloadWithRt = req.user;
+    refresh(@User() user: JwtPayloadWithRt) {
         return this.authService.refreshTokens(user.sub, user.refreshToken);
     }
 }
