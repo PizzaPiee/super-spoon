@@ -5,7 +5,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { JwtRefreshGuard } from './jwt-refresh.guard';
 import { LocalAuthGuard } from './local-auth.guard';
-import { JwtPayloadWithRt } from './types';
+import { JwtPayload, JwtPayloadWithRt } from './types';
 import { Tokens } from './types/token.type';
 
 @Controller('auth')
@@ -26,15 +26,14 @@ export class AuthController {
     @UseGuards(JwtAuthGuard)
     @Post('logout')
     logout(@Req() req) {
-        console.log(req.user.userId);
-        return this.authService.logout(req.user.userId);
+        const user: JwtPayload = req.user;
+        return this.authService.logout(user.sub);
     }
 
     @UseGuards(JwtRefreshGuard)
     @Post('refresh')
     refresh(@Req() req) {
         const user: JwtPayloadWithRt = req.user;
-        console.log(user);
         return this.authService.refreshTokens(user.sub, user.refreshToken);
     }
 }
